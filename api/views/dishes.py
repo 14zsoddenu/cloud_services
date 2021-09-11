@@ -3,17 +3,11 @@ from typing import List
 from django.core.handlers.wsgi import WSGIRequest
 from django.db import transaction, IntegrityError
 from ninja import Router
-from ninja.orm import create_schema
 
 from api.models.dishes import Dish
-from api.schemas import create_update_schema
+from api.schemas import DishSchemaOut, DishSchemaIn, DishUpdateSchemaIn
 
 dishes_router = Router()
-
-DishSchemaOut = create_schema(Dish, name="DishSchemaOut")
-DishSchemaIn = create_schema(Dish, name="DishSchemaIn", exclude=["id"])
-
-DishUpdateSchemaIn = create_update_schema(Dish, name="DishUpdateSchemaIn", exclude=["id"])
 
 
 @dishes_router.get("/", summary="Get all dishes", response=List[DishSchemaOut])

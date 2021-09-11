@@ -5,7 +5,7 @@ from django.http import JsonResponse
 
 from config import BASE_API_URL
 from tests import client
-from tests.conftest import create_test_dish
+from tests.conftest import create_test_dish, create_test_card
 from tests.testing_utils import empty_data_validation, remove_Z_in_datetime_value
 from utils.serialization import serialize_object
 
@@ -15,6 +15,7 @@ from utils.serialization import serialize_object
     "url",
     [
         "/dishes/99",
+        "/cards/99",
     ],
 )
 def object_not_found_test(url):
@@ -28,9 +29,7 @@ def object_not_found_test(url):
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "url",
-    [
-        "/dishes/",
-    ],
+    ["/dishes/", "/cards/"],
 )
 def empty_list_200_test(url):
     empty_data_validation(url=f"/{BASE_API_URL}{url}", expected_result=[], status_code=HTTPStatus.OK)
@@ -41,6 +40,7 @@ def empty_list_200_test(url):
     "object_name,create_func",
     [
         ("dishes", create_test_dish),
+        ("cards", create_test_card),
     ],
 )
 def get_endpoint_test(object_name, create_func):
@@ -53,9 +53,7 @@ def get_endpoint_test(object_name, create_func):
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "object_name,create_func",
-    [
-        ("dishes/", create_test_dish),
-    ],
+    [("dishes/", create_test_dish), ("cards/", create_test_card)],
 )
 def get_list_endpoint_test(object_name, create_func):
     o_list = [create_func(i) for i in range(1, 3)]

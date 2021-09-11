@@ -17,7 +17,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken, TokenError
 
 from api.models import Dish
+from api.models.cards import Card
 from api.schemas import ErrorSchema
+from api.views.cards import cards_router
 from api.views.dishes import dishes_router
 from config import TEST_MODE, DEBUG_MODE
 from utils.serialization import serialize_object, serialize_objects
@@ -80,6 +82,7 @@ class JWTAuth(HttpAuthBase, ABC):  # TODO: maybe HttpBasicAuthBase
 
 api = NinjaAPI(title="Cloud Services", renderer=JsonRenderer(), auth=JWTAuth())
 api.add_router("/dishes/", dishes_router)
+api.add_router("/cards/", cards_router)
 
 
 def object_not_found(request, exc):
@@ -129,7 +132,7 @@ def authentication_failed_handler(request, exc):
 
 
 # TODO
-for model_class in [Dish]:
+for model_class in [Dish, Card]:
     api.add_exception_handler(model_class.DoesNotExist, object_not_found)
     api.add_exception_handler(model_class.MultipleObjectsReturned, multiple_objects)
 
