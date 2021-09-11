@@ -8,10 +8,11 @@ import pytest
 from django.db import transaction
 from django.http import JsonResponse
 from loguru import logger
+from ninja.responses import NinjaJSONEncoder
 
 from api.models import Dish
 from api.models.cards import Card
-from api.schemas import CardSchemaIn
+from api.schemas import CardSchemaIn, CardPrettySchemaOut
 from config import BASE_API_URL
 from tests.conftest import create_test_card
 from tests.testing_utils import remove_Z_in_datetime_value
@@ -114,7 +115,7 @@ CARDS_FILTERING_POSSIBLE_FIELDS_COMBOS = list(
     itertools.chain(
         *[
             list(itertools.combinations(CARDS_FILTERING_NAME_VALUES_MAP.keys(), fields_count_in_combo))
-            for fields_count_in_combo in range(1, len(CARDS_FILTERING_NAME_VALUES_MAP.keys()) + 1)
+            for fields_count_in_combo in range(0, len(CARDS_FILTERING_NAME_VALUES_MAP.keys()) + 1)
         ]
     )
 )
@@ -146,7 +147,6 @@ print("combinations created")
 def get_all_non_empty_cards_filtering_test(filters_names, filters_values, anon_client):
     with transaction.atomic():
         cards = [Card.objects.create(**card_schema.dict()) for card_schema in FILTERING_TEST_CARDS_SCHEMAS_LIST]
-        # with transaction.atomic():
         counter = 0
         for card_number, card in enumerate(cards):
             dishes = [
@@ -172,4 +172,14 @@ def get_all_non_empty_cards_filtering_test(filters_names, filters_values, anon_c
     assert response.status_code == HTTPStatus.OK
     assert json.dumps(remove_Z_in_datetime_value(response.json()), sort_keys=True) == json.dumps(
         [serialize_object(card) for card in expected_result_cards], sort_keys=True
+    )
+
+
+@pytest.mark.django_db
+def get_pretty_card_by_id_test(anon_client):
+    card = create_test_card()
+    response: JsonResponse = anon_client.get(f"/{BASE_API_URL}/menu/cards/{card.id}")
+    assert response.status_code == HTTPStatus.OK
+    assert remove_Z_in_datetime_value(response.json()) == remove_Z_in_datetime_value(
+        json.loads(json.dumps((CardPrettySchemaOut.from_orm(card).dict()), sort_keys=True, cls=NinjaJSONEncoder))
     )

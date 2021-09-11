@@ -23,6 +23,8 @@ DishSchemaOut = create_schema(Dish, name="DishSchemaOut")
 DishSchemaIn = create_schema(Dish, name="DishSchemaIn", exclude=["id"])
 DishUpdateSchemaIn = create_update_schema(Dish, name="DishUpdateSchemaIn", exclude=["id"])
 
+CardPrettySchemaOut = create_schema(Card, name="CardPrettySchemaOut", depth=2)
+
 
 class DishInCardSchema(Schema):
     card_id: int

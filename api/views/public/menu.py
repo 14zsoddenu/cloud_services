@@ -8,7 +8,7 @@ from ninja import Router, Schema, Query
 from pydantic import validator
 
 from api.models.cards import Card
-from api.schemas import CardSchemaOut
+from api.schemas import CardSchemaOut, CardPrettySchemaOut
 
 menu_router = Router()
 
@@ -61,3 +61,8 @@ def get_all_non_empty_cards(request: WSGIRequest, query_schema: AllNonEmptyCards
     result = result.distinct()
     logger.debug(sorted([c.id for c in result]))
     return result
+
+
+@menu_router.get("/cards/{id}", summary="Get card details (including dishes)", response=CardPrettySchemaOut)
+def get_pretty_card_by_id(request: WSGIRequest, id: int):
+    return Card.objects.get(id=id)
