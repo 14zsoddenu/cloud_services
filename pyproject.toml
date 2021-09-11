@@ -24,3 +24,13 @@ pytest-django = "^4.4.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+exclude = '''
+/(
+  | venv
+  | backend/models/__init__.py
+  | migrations
+)/
+'''
