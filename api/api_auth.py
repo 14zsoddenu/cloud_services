@@ -6,8 +6,6 @@ from ninja.compatibility import get_headers
 from ninja.security.http import HttpAuthBase
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from config import TEST_MODE
-
 
 class JWTAuth(HttpAuthBase, ABC):  # TODO: maybe HttpBasicAuthBase
     openapi_scheme = "jwt"

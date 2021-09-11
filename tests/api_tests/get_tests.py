@@ -4,7 +4,7 @@ import pytest
 from django.http import JsonResponse
 
 from config import BASE_API_URL
-from tests.conftest import create_test_dish, create_test_card, logged_client
+from tests.conftest import create_test_dish, create_test_card
 from tests.testing_utils import empty_data_validation, remove_Z_in_datetime_value
 from utils.serialization import serialize_object
 

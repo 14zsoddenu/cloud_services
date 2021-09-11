@@ -21,7 +21,7 @@ def create_test_dish(number=1):
 
 
 def create_test_card(number=1):
-    dishes = [create_test_dish(i) for i in range(3)]
+    dishes = [create_test_dish(i) for i in range(number * 3)]
     card = Card.objects.get_or_create(name=f"Card{number}", description=f"CardDescription{number}")[0]
     for dish in dishes:
         card.dishes.add(dish)

@@ -17,6 +17,7 @@ from api.schemas import ErrorSchema
 from api.views.cards_management import cards_management_router
 from api.views.crud.cards import cards_router
 from api.views.crud.dishes import dishes_router
+from api.views.public.menu import menu_router
 from config import DEBUG_MODE
 from utils.serialization import serialize_object, serialize_objects
 
@@ -59,6 +60,7 @@ api = NinjaAPI(title="Cloud Services", renderer=JsonRenderer())
 api.add_router("/dishes/", dishes_router)
 api.add_router("/cards/", cards_router)
 api.add_router("/manage/", cards_management_router)
+api.add_router("/menu/", menu_router)
 
 
 def object_not_found(request, exc):
