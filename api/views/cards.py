@@ -6,7 +6,7 @@ from ninja import Router
 
 from api.models.cards import Card
 from api.schemas import CardSchemaOut, CardSchemaIn, CardUpdateSchemaIn
-from api.views.dishes import exclude_none_values
+from api.views.views_utils import exclude_none_values
 
 cards_router = Router()
 

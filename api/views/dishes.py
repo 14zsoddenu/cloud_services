@@ -6,6 +6,7 @@ from ninja import Router
 
 from api.models.dishes import Dish
 from api.schemas import DishSchemaOut, DishSchemaIn, DishUpdateSchemaIn
+from api.views.views_utils import exclude_none_values
 
 dishes_router = Router()
 
@@ -24,25 +25,6 @@ def get_dish_by_id(request: WSGIRequest, id: int):
 def create_dish(request: WSGIRequest, dish_data: DishSchemaIn):
     with transaction.atomic():
         return Dish.objects.create(**dish_data.dict())
-
-
-def exclude_none_values(d):
-    if isinstance(d, dict):
-        result = {}
-        for key, value in d.items():
-            if value is not None:
-                processed_value = exclude_none_values(value)
-                if processed_value is not None:
-                    result[key] = processed_value
-    elif isinstance(d, list):
-        result = []
-        for item in d:
-            processed_value = exclude_none_values(item)
-            if processed_value is not None:
-                result.append(processed_value)
-    else:
-        return d
-    return result
 
 
 @dishes_router.put("/{id}", summary="Update dish", response=DishSchemaOut)
