@@ -2,11 +2,9 @@ import json
 
 from django.http import JsonResponse
 
-from tests import client
 
-
-def empty_data_validation(url, expected_result, status_code):
-    response: JsonResponse = client.get(
+def empty_data_validation(logged_client, url, expected_result, status_code):
+    response: JsonResponse = logged_client.get(
         url,
         HTTP_USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -45,4 +43,15 @@ def remove_Z_in_datetime_value(d):
         result = [remove_Z_in_datetime_value(item) for item in d]
     else:
         result = None
+    return result
+
+
+def exclude_time_values(d):
+    if isinstance(d, dict):
+        result = {}
+        for key, value in d.items():
+            if not "time" in key:
+                result[key] = value
+    else:
+        return d
     return result

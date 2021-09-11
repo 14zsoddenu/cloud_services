@@ -1,6 +1,11 @@
 import datetime
 import random
 
+import pytest
+from django.contrib.auth.models import User
+from django.test import Client
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from api.models.cards import Card
 from api.models.dishes import Dish
 
@@ -22,3 +27,17 @@ def create_test_card(number=1):
         card.dishes.add(dish)
     card.save()
     return card
+
+
+@pytest.fixture
+def logged_client(db):
+    user = User.objects.create_user(username="john", email="js@js.com", password="js.sj")
+    refresh = RefreshToken.for_user(user)
+    client = Client(HTTP_AUTHORIZATION=f"JWT {refresh.access_token}")
+    return client
+
+
+@pytest.fixture(scope="session")
+def anon_client():
+    client = Client()
+    return client

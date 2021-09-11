@@ -22,3 +22,8 @@ CardUpdateSchemaIn = create_update_schema(Card, name="CardUpdateSchemaIn", exclu
 DishSchemaOut = create_schema(Dish, name="DishSchemaOut")
 DishSchemaIn = create_schema(Dish, name="DishSchemaIn", exclude=["id"])
 DishUpdateSchemaIn = create_update_schema(Dish, name="DishUpdateSchemaIn", exclude=["id"])
+
+
+class DishInCardSchema(Schema):
+    card_id: int
+    dish_id: int

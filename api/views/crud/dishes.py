@@ -4,15 +4,16 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.db import transaction, IntegrityError
 from ninja import Router
 
+from api.api_auth import JWTAuth
 from api.models.dishes import Dish
 from api.schemas import DishSchemaOut, DishSchemaIn, DishUpdateSchemaIn
 from api.views.views_utils import exclude_none_values
 
-dishes_router = Router()
+dishes_router = Router(auth=JWTAuth())
 
 
 @dishes_router.get("/", summary="Get all dishes", response=List[DishSchemaOut])
-def create_dish(request: WSGIRequest):
+def get_all_dishes(request: WSGIRequest):
     return Dish.objects.all()
 
 

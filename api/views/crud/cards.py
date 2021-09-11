@@ -4,11 +4,12 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.db import transaction, IntegrityError
 from ninja import Router
 
+from api.api_auth import JWTAuth
 from api.models.cards import Card
 from api.schemas import CardSchemaOut, CardSchemaIn, CardUpdateSchemaIn
 from api.views.views_utils import exclude_none_values
 
-cards_router = Router()
+cards_router = Router(auth=JWTAuth())
 
 
 @cards_router.get("/", summary="Get all cards", response=List[CardSchemaOut])

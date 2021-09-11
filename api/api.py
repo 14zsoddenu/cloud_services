@@ -1,27 +1,23 @@
 import json
 import traceback
-from abc import ABC
 from http import HTTPStatus
-from typing import Optional, Any, Type, Mapping
+from typing import Any, Type, Mapping
 
 from django.db import IntegrityError
-from django.http import HttpRequest
 from django.http.response import HttpResponseBase, JsonResponse, HttpResponse
 from loguru import logger
 from ninja import NinjaAPI
-from ninja.compatibility import get_headers
 from ninja.renderers import BaseRenderer
 from ninja.responses import NinjaJSONEncoder
-from ninja.security.http import HttpAuthBase
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, InvalidToken, TokenError
 
 from api.models import Dish
 from api.models.cards import Card
 from api.schemas import ErrorSchema
-from api.views.cards import cards_router
-from api.views.dishes import dishes_router
-from config import TEST_MODE, DEBUG_MODE
+from api.views.cards_management import cards_management_router
+from api.views.crud.cards import cards_router
+from api.views.crud.dishes import dishes_router
+from config import DEBUG_MODE
 from utils.serialization import serialize_object, serialize_objects
 
 
@@ -59,30 +55,10 @@ class JsonRenderer(BaseRenderer):
         return response
 
 
-class JWTAuth(HttpAuthBase, ABC):  # TODO: maybe HttpBasicAuthBase
-    openapi_scheme = "jwt"
-    header = "Authorization"
-
-    def __call__(self, request: HttpRequest) -> Optional[Any]:
-        if TEST_MODE:
-            return True
-        headers = get_headers(request)
-        auth_value = headers.get(self.header)
-        if not auth_value:
-            return None
-
-        return self.authenticate(request)
-
-    def authenticate(self, request: HttpRequest) -> Optional[Any]:
-        jwt_auth = JWTAuthentication()
-        user, validated_token = jwt_auth.authenticate(request)
-        request.user = user
-        return user
-
-
-api = NinjaAPI(title="Cloud Services", renderer=JsonRenderer(), auth=JWTAuth())
+api = NinjaAPI(title="Cloud Services", renderer=JsonRenderer())
 api.add_router("/dishes/", dishes_router)
 api.add_router("/cards/", cards_router)
+api.add_router("/manage/", cards_management_router)
 
 
 def object_not_found(request, exc):
