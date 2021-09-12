@@ -18,6 +18,7 @@ huey = "^2.4.0"
 redis = "^3.5.3"
 redis-dict = "^1.5.2"
 pytz = "^2021.1"
+django-createsuperuser = "^2020.12.3"
 
 [tool.poetry.dev-dependencies]
 black = "^21.8b0"

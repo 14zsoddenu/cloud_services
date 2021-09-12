@@ -16,7 +16,7 @@ def index(request: WSGIRequest):
     logger.info(str(request.user))
     logger.info(str(request.user.username))
     return JsonResponse(
-        f"Hello, {request.user.username if request.user.username else 'Anon'}! LSA Backend is online!",
+        f"Hello, {request.user.username if request.user.username else 'Anon'}! Cloud Services Backend is online!",
         safe=False,
         status=HTTPStatus.OK,
     )

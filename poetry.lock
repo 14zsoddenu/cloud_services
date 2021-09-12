@@ -92,7 +92,7 @@ unicode_backport = ["unicodedata2"]
 name = "click"
 version = "8.0.1"
 description = "Composable command line interface toolkit"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -186,6 +186,18 @@ sqlparse = ">=0.2.2"
 [package.extras]
 argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
+
+[[package]]
+name = "django-createsuperuser"
+version = "2020.12.3"
+description = "createsuperuser with password"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+click = "*"
+Django = "*"
 
 [[package]]
 name = "django-environ"
@@ -795,7 +807,7 @@ dev = ["pytest (>=4.6.2)", "black (>=19.3b0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "7c31fa4cb7f1f51bc379dd68c72244b34aa37d17b7856ae3aeff139776305df3"
+content-hash = "bbc8fd657f4e7a91102ea6eaf7d97d5a623aa7c4e69a162acbf3d9e407224f24"
 
 [metadata.files]
 asgiref = [
@@ -965,6 +977,9 @@ defusedxml = [
 django = [
     {file = "Django-3.2.7-py3-none-any.whl", hash = "sha256:e93c93565005b37ddebf2396b4dc4b6913c1838baa82efdfb79acedd5816c240"},
     {file = "Django-3.2.7.tar.gz", hash = "sha256:95b318319d6997bac3595517101ad9cc83fe5672ac498ba48d1a410f47afecd2"},
+]
+django-createsuperuser = [
+    {file = "django-createsuperuser-2020.12.3.tar.gz", hash = "sha256:ce538d81f56899cefa8c78d965df631531eab15de04e90a84781d604def05dac"},
 ]
 django-environ = [
     {file = "django-environ-0.6.0.tar.gz", hash = "sha256:6b3ce447f31c5a5144671d754baa0819c9bde2fb34dcdc05ba619a97f4567e5a"},

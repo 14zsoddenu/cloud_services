@@ -13,4 +13,4 @@ RUN pip3 install poetry --no-cache-dir && poetry install --no-dev && rm -rf ~/.c
 
 VOLUME /usr/src/app/static
 
-CMD ["gunicorn", "cloud_services.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD gunicorn cloud_services.wsgi:application --bind 0.0.0.0:8000
