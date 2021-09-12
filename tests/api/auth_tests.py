@@ -10,8 +10,10 @@ from config import BASE_API_URL
     [
         ("cards/", "post"),
         ("cards/1", "put"),
+        ("cards/1", "delete"),
         ("dishes/", "post"),
-        ("cards/1", "put"),
+        ("dishes/1", "put"),
+        ("dishes/1", "delete"),
         ("manage/add", "post"),
         ("manage/remove", "post"),
     ],
