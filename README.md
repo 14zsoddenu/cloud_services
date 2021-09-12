@@ -83,6 +83,15 @@ python -m pytest tests -s -vvv -p no:cacheprovider
 
 EnvFile plugin: https://plugins.jetbrains.com/plugin/7861-envfile
 
+### Coverage
+
+```bash
+export $(grep -v '#.*' test.env | xargs)
+python -m pytest tests -s -vvv --cov=. --cov-report html -p no:cacheprovider
+```
+
+Then, open ```index.html``` in ```htmlcov``` directory.
+
 ## Author
 
 Oleksandr Kudryavtsev (```14zsoddenu@gmail.com```).
