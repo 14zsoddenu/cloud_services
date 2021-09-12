@@ -9,10 +9,15 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import environ
+
+from config import REDIS_PORT, REDIS_DB, REDIS_HOST, DEBUG_MODE, DATABASE_NAME, DEV_MODE
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -22,9 +27,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-&^eljzot0k_@nvg(_w^ayu9-lst78%vyr)kb%*atwx^_-z&-t7"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DEBUG_MODE or DEV_MODE
 
-ALLOWED_HOSTS = []
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -36,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "api",
+    "huey.contrib.djhuey",
 ]
 
 MIDDLEWARE = [
@@ -71,12 +82,17 @@ WSGI_APPLICATION = "cloud_services.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if os.getenv("DATABASE_URL", None) is None:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {"default": env.db("DATABASE_URL")}
+    DATABASES["default"]["TEST"] = {"NAME": f"{DATABASE_NAME}_test"}
+    DATABASES["default"]["NAME"] = DATABASE_NAME
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -125,4 +141,14 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_HEADER_TYPES": ("JWT",),
+}
+HUEY = {
+    "huey_class": "huey.RedisHuey",
+    "name": DATABASES["default"]["NAME"],
+    # 'immediate': True,
+    "connection": {
+        "host": REDIS_HOST,
+        "port": REDIS_PORT,
+        "db": REDIS_DB,
+    },
 }

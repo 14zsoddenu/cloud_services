@@ -1,6 +1,17 @@
 import json
+import traceback
+from typing import Tuple, Any, Optional
 
 from django.http import JsonResponse
+from loguru import logger
+
+
+def safe_run(func, *args, **kwargs) -> Tuple[Any, Optional[BaseException]]:
+    try:
+        result = func(*args, **kwargs)
+        return result, None
+    except BaseException as e:
+        return None, e
 
 
 def empty_data_validation(logged_client, url, expected_result, status_code):
@@ -55,3 +66,13 @@ def exclude_time_values(d):
     else:
         return d
     return result
+
+
+def no_errors(func, *args, **kwargs):
+    _, exc = safe_run(func, *args, **kwargs)
+    if exc is not None:
+        try:
+            raise exc
+        except BaseException:
+            logger.error(traceback.format_exc())
+    return exc is None

@@ -3,6 +3,8 @@
 import os
 import sys
 
+from config import DEV_MODE
+
 
 def main():
     """Run administrative tasks."""
@@ -17,6 +19,11 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
+
+if DEV_MODE:
+    from utils.containers import with_dev_redis
+
+    main = with_dev_redis(main)
 
 if __name__ == "__main__":
     main()
