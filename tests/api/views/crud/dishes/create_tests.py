@@ -1,3 +1,4 @@
+import datetime
 from http import HTTPStatus
 
 import pytest
@@ -5,10 +6,7 @@ from django.db.models import NOT_PROVIDED
 
 from api.models import Dish
 from config import BASE_API_URL
-from tests.api_tests.test_data import TEST_DISH_DATA
-from tests.conftest import create_test_dish
-from tests.testing_utils import remove_Z_in_datetime_value, exclude_time_values
-from utils.serialization import serialize_object
+from tests.api.test_data import TEST_DISH_DATA
 
 
 @pytest.mark.django_db
@@ -41,15 +39,20 @@ def create_dish_missing_data_test(key_to_exclude, logged_client):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "key_to_exclude",
-    [field.name for field in Dish._meta.fields if field.name != "id" and "time" not in field.name],
-)
-def update_dish_data_test(key_to_exclude, logged_client):
-    dish = create_test_dish()
-    update_dict = {key: value for key, value in TEST_DISH_DATA.items() if key != key_to_exclude}
-    response = logged_client.put(f"/{BASE_API_URL}/dishes/{dish.id}", data=update_dict, content_type="application/json")
-    assert response.status_code == HTTPStatus.OK
-    assert exclude_time_values(remove_Z_in_datetime_value(response.json())) == exclude_time_values(
-        {**serialize_object(dish), **update_dict}
-    )
+def create_dish_invalid_data_test(logged_client):
+    create_dict = {key: None for key in TEST_DISH_DATA.keys()}
+    response = logged_client.post(f"/{BASE_API_URL}/dishes/", data=create_dict, content_type="application/json")
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+
+
+@pytest.mark.django_db
+def create_dish_changed_after_created_data_test(logged_client):
+    create_dict = {
+        **TEST_DISH_DATA,
+        **{
+            "added_datetime": datetime.datetime(year=2020, month=9, day=12),
+            "changed_datetime": datetime.datetime(year=2020, month=9, day=11),
+        },
+    }
+    response = logged_client.post(f"/{BASE_API_URL}/dishes/", data=create_dict, content_type="application/json")
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY

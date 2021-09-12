@@ -3,7 +3,7 @@
 import os
 import sys
 
-from config import DEV_MODE
+from config import DEV_REDIS
 
 
 def main():
@@ -20,7 +20,7 @@ def main():
     execute_from_command_line(sys.argv)
 
 
-if DEV_MODE:
+if DEV_REDIS:
     from utils.containers import with_dev_redis
 
     main = with_dev_redis(main)

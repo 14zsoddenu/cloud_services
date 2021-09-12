@@ -86,6 +86,7 @@ FILTERING_TEST_CARDS_SCHEMAS_LIST = [
     for possible_name, (possible_added_datetime, possible_changed_datetime) in zip(
         possible_names, zip(possible_added_datetimes, possible_changed_datetimes)
     )
+    if possible_changed_datetime > possible_added_datetime
 ]
 
 CARDS_FILTERING_FIELDS = [

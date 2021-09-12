@@ -9,9 +9,8 @@ from dockerctx import new_container
 from loguru import logger
 from redis import BusyLoadingError
 
-from config import DEV_MODE
+from config import DEV_REDIS
 from constants import REDIS_CONTAINER_CONFIG
-
 from rediska import redis_db
 
 
@@ -72,4 +71,4 @@ def with_dev_redis(func):
         with run_container_from_config(REDIS_CONTAINER_CONFIG, wait_for_redis_startup):
             return func(*args, **kwargs)
 
-    return dev_redis_context if DEV_MODE else func
+    return dev_redis_context if DEV_REDIS else func

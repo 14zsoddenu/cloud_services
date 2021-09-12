@@ -143,12 +143,13 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
 }
 HUEY = {
-    "huey_class": "huey.RedisHuey",
+    "huey_class": "huey.RedisHuey" if not DEV_MODE else "huey.SqliteHuey",
     "name": DATABASES["default"]["NAME"],
     # 'immediate': True,
-    "connection": {
+}
+if not DEV_MODE:
+    HUEY["connection"] = {
         "host": REDIS_HOST,
         "port": REDIS_PORT,
         "db": REDIS_DB,
-    },
-}
+    }

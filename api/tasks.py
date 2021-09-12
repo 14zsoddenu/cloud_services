@@ -70,10 +70,10 @@ def send_email_about_new_and_modified_dishes_from_yesterday_to_all_users_task(*a
     )
     subject = """Check out new deals!"""
     message = (
-            "New dishes:\n"
-            + "\n".join(format_dish_for_email(dish=dish) for dish in yesterday_added_dishes)
-            + "\nModified recipies dishes:\n"
-            + "\n".join(format_dish_for_email(dish=dish) for dish in yesterday_modified_dishes)
+        "New dishes:\n"
+        + "\n".join(format_dish_for_email(dish=dish) for dish in yesterday_added_dishes)
+        + "\nModified recipies dishes:\n"
+        + "\n".join(format_dish_for_email(dish=dish) for dish in yesterday_modified_dishes)
     )
 
     for user in users:
