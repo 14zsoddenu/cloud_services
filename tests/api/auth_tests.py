@@ -34,7 +34,7 @@ def unathorized_access_to_private_api_test(url, method, anon_client):
     response = request_func(full_url, content_type="application/json")
     assert response.status_code == HTTPStatus.UNAUTHORIZED
 
-
+@pytest.mark.django_db
 @pytest.mark.parametrize(
     "url,method",
     [
