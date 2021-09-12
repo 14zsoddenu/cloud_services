@@ -2,6 +2,7 @@ from typing import List
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.db import transaction, IntegrityError
+from django.utils import timezone
 from ninja import Router
 
 from api.api_auth import JWTAuth
@@ -32,6 +33,8 @@ def create_card(request: WSGIRequest, card_data: CardSchemaIn):
 def update_card(request: WSGIRequest, id: int, card_data: CardUpdateSchemaIn):
     with transaction.atomic():
         update_dict = exclude_none_values(card_data.dict())
+        if "changed_datetime" not in update_dict:
+            update_dict["changed_datetime"] = timezone.now()
         Card.objects.update(id=id, **update_dict)
         return Card.objects.get(id=id)
 

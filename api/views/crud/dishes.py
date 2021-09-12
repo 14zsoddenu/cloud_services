@@ -4,6 +4,7 @@ from typing import List
 from django.core.handlers.wsgi import WSGIRequest
 from django.db import transaction, IntegrityError
 from django.http import HttpResponse
+from django.utils import timezone
 from ninja import Router, UploadedFile, File
 
 from api.api_auth import JWTAuth
@@ -34,6 +35,8 @@ def create_dish(request: WSGIRequest, dish_data: DishSchemaIn):
 def update_dish(request: WSGIRequest, id: int, dish_data: DishUpdateSchemaIn):
     with transaction.atomic():
         update_dict = exclude_none_values(dish_data.dict())
+        if "changed_datetime" not in update_dict:
+            update_dict["changed_datetime"] = timezone.now()
         Dish.objects.update(id=id, **update_dict)
         return Dish.objects.get(id=id)
 
