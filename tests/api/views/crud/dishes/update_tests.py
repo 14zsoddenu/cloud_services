@@ -25,7 +25,7 @@ def update_dish_data_test(logged_client):
     response = logged_client.put(f"/{BASE_API_URL}/dishes/{dish.id}", data=update_dict, content_type="application/json")
     assert response.status_code == HTTPStatus.OK
     assert exclude_time_values(remove_Z_in_datetime_value(response.json())) == exclude_time_values(
-        {**serialize_object(dish), **update_dict}
+        {**serialize_object(dish, exclude=["image"]), **update_dict}
     )
 
 
@@ -40,7 +40,7 @@ def update_dish_data_missing_data_test(key_to_exclude, logged_client):
     response = logged_client.put(f"/{BASE_API_URL}/dishes/{dish.id}", data=update_dict, content_type="application/json")
     assert response.status_code == HTTPStatus.OK
     assert exclude_time_values(remove_Z_in_datetime_value(response.json())) == exclude_time_values(
-        {**serialize_object(dish), **update_dict}
+        {**serialize_object(dish, exclude=["image"]), **update_dict}
     )
 
 

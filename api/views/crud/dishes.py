@@ -1,8 +1,10 @@
+from http import HTTPStatus
 from typing import List
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.db import transaction, IntegrityError
-from ninja import Router
+from django.http import HttpResponse
+from ninja import Router, UploadedFile, File
 
 from api.api_auth import JWTAuth
 from api.models.dishes import Dish
@@ -45,3 +47,20 @@ def delete_dish(request: WSGIRequest, id: int):
             return True
         except IntegrityError:
             return False
+
+
+@dishes_router.get("/{id}/image.jpg", summary="Get dish image by ID")
+def get_dish_image_by_id(request: WSGIRequest, id: int):
+    image = Dish.objects.get(id=id).image
+    if image is None:
+        return HttpResponse(status=HTTPStatus.NOT_FOUND)
+
+    return HttpResponse(image, status=HTTPStatus.OK, content_type="image/jpeg")
+
+
+@dishes_router.post("/{id}/image.jpg", summary="Post image to dish by ID")
+def post_image_to_dish_by_id(request: WSGIRequest, id: int, file: UploadedFile = File(...)):
+    dish = Dish.objects.get(id=id)
+    dish.image = file.read()
+    dish.save()
+    return HttpResponse(status=HTTPStatus.OK)

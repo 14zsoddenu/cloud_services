@@ -44,8 +44,8 @@ class CardUpdateSchemaIn(_CardUpdateSchemaIn):
         return values
 
 
-DishSchemaOut = create_schema(Dish, name="DishSchemaOut")
-_DishSchemaIn = create_schema(Dish, name="DishSchemaIn", exclude=["id"])
+DishSchemaOut = create_schema(Dish, name="DishSchemaOut", exclude=["image"])
+_DishSchemaIn = create_schema(Dish, name="DishSchemaIn", exclude=["id", "image"])
 
 
 class DishSchemaIn(_DishSchemaIn):
@@ -57,7 +57,7 @@ class DishSchemaIn(_DishSchemaIn):
         return values
 
 
-_DishUpdateSchemaIn = create_update_schema(Dish, name="DishUpdateSchemaIn", exclude=["id"])
+_DishUpdateSchemaIn = create_update_schema(Dish, name="DishUpdateSchemaIn", exclude=["id", "image"])
 
 
 class DishUpdateSchemaIn(_DishUpdateSchemaIn):

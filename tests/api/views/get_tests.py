@@ -49,7 +49,7 @@ def get_endpoint_test(object_name, create_func, logged_client):
     o = create_func()
     response: JsonResponse = logged_client.get(f"/{BASE_API_URL}/{object_name}/{o.pk}")
     assert response.status_code == HTTPStatus.OK
-    assert remove_Z_in_datetime_value(response.json()) == serialize_object(o)
+    assert remove_Z_in_datetime_value(response.json()) == serialize_object(o, exclude=["image"])
 
 
 @pytest.mark.django_db
@@ -61,4 +61,4 @@ def get_list_endpoint_test(object_name, create_func, logged_client):
     o_list = [create_func(i) for i in range(1, 3)]
     response: JsonResponse = logged_client.get(f"/{BASE_API_URL}/{object_name}")
     assert response.status_code == HTTPStatus.OK
-    assert remove_Z_in_datetime_value(response.json()) == [serialize_object(o) for o in o_list]
+    assert remove_Z_in_datetime_value(response.json()) == [serialize_object(o, exclude=["image"]) for o in o_list]
