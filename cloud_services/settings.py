@@ -16,7 +16,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import environ
 
-from config import REDIS_PORT, REDIS_DB, REDIS_HOST, DEBUG_MODE, DATABASE_NAME, DEV_MODE
+from config import REDIS_PORT, REDIS_DB, REDIS_HOST, DEBUG_MODE, DATABASE_NAME, DEV_MODE, TZ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -117,13 +117,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
-
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
+
+TIME_ZONE = TZ
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

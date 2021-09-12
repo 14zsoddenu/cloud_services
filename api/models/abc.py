@@ -1,10 +1,9 @@
-from datetime import datetime
-
 from django.db import models
+from django.utils import timezone
 
 
 class AbstractDatetimeTrackable(models.Model):
-    added_datetime = models.DateTimeField(default=datetime.utcnow)
+    added_datetime = models.DateTimeField(default=timezone.now)
     changed_datetime = models.DateTimeField(null=True, blank=True)
 
     class Meta:

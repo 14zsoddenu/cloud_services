@@ -2,6 +2,7 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.utils import timezone
 from huey import crontab
 from huey.contrib.djhuey import HUEY
 from loguru import logger
@@ -36,7 +37,7 @@ def send_email_task(user_id, subject, message, *args, **kwargs):
     except User.DoesNotExist:
         logger.error(f"There is no user with id {user_id}")
     finally:
-        redis_db[f"send_email_task:{user_id}:called"] = f"{subject} -> {datetime.datetime.utcnow()}"
+        redis_db[f"send_email_task:{user_id}:called"] = f"{subject} -> {timezone.now()}"
 
 
 @huey.periodic_task(crontab(hour=10))
@@ -44,8 +45,8 @@ def send_email_about_modified_dishes_from_yesterday_to_all_users_task(*args, **k
     users = User.objects.all()
 
     yesterday_modified_dishes = Dish.objects.filter(
-        changed_datetime__gte=(datetime.datetime.utcnow().date() - datetime.timedelta(days=1)),
-        changed_datetime__lt=(datetime.datetime.utcnow().date()),
+        changed_datetime__gte=(timezone.now().date() - datetime.timedelta(days=1)),
+        changed_datetime__lt=(timezone.now().date()),
     )
     subject = """Check out old but gold deals!"""
     message = "Modified recipies dishes:\n" + "\n".join(
@@ -61,12 +62,12 @@ def send_email_about_new_and_modified_dishes_from_yesterday_to_all_users_task(*a
     users = User.objects.all()
 
     yesterday_added_dishes = Dish.objects.filter(
-        added_datetime__gte=(datetime.datetime.utcnow().date() - datetime.timedelta(days=1)),
-        added_datetime__lt=(datetime.datetime.utcnow().date()),
+        added_datetime__gte=(timezone.now().date() - datetime.timedelta(days=1)),
+        added_datetime__lt=(timezone.now().date()),
     )
     yesterday_modified_dishes = Dish.objects.filter(
-        changed_datetime__gte=(datetime.datetime.utcnow().date() - datetime.timedelta(days=1)),
-        changed_datetime__lt=(datetime.datetime.utcnow().date()),
+        changed_datetime__gte=(timezone.now().date() - datetime.timedelta(days=1)),
+        changed_datetime__lt=(timezone.now().date()),
     )
     subject = """Check out new deals!"""
     message = (

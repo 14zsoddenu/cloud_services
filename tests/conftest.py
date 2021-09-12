@@ -8,6 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.models.cards import Card
 from api.models.dishes import Dish
+from config import DEV_REDIS
 from constants import REDIS_CONTAINER_CONFIG
 from utils.containers import wait_for_redis_startup, run_container_from_config
 
@@ -46,8 +47,11 @@ def anon_client():
 
 
 def redis_container_base():
-    with run_container_from_config(REDIS_CONTAINER_CONFIG, wait_for_redis_startup) as c:
-        yield c
+    if DEV_REDIS:
+        with run_container_from_config(REDIS_CONTAINER_CONFIG, wait_for_redis_startup) as c:
+            yield c
+    else:
+        yield
 
 
 redis_container = pytest.fixture(scope="session")(redis_container_base)

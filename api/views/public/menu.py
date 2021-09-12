@@ -59,7 +59,6 @@ def get_all_non_empty_cards(request: WSGIRequest, query_schema: AllNonEmptyCards
         result = result.order_by(query_schema.sort_by)
 
     result = result.distinct()
-    logger.debug(sorted([c.id for c in result]))
     return result
 
 

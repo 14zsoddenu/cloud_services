@@ -12,3 +12,4 @@ REDIS_DB = os.getenv("REDIS_DB", default="0")
 REDIS_NAMESPACE = os.getenv("REDIS_NAMESPACE", default="cloud_services")
 REDIS_EXPIRE = int(os.getenv("REDIS_EXPIRE", default=60 * 60 * 24))
 CRAZY_PRINTER_MODE = os.getenv("CRAZY_PRINTER_MODE", "no") == "yes"
+TZ = os.getenv("TZ", "UTC")

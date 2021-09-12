@@ -4,6 +4,7 @@ from time import sleep
 
 import pytest
 from django.contrib.auth.models import User
+from django.utils import timezone
 from huey.contrib.djhuey import HUEY
 
 from api.models import Dish
@@ -20,8 +21,8 @@ huey = HUEY
 
 
 def no_value_with_redis_key(key, seconds=5):
-    time_to_appear = datetime.datetime.utcnow() + datetime.timedelta(seconds=seconds)
-    while datetime.datetime.utcnow() < time_to_appear:
+    time_to_appear = timezone.now() + datetime.timedelta(seconds=seconds)
+    while timezone.now() < time_to_appear:
         try:
             redis_db[key]
             sleep(0.01)
@@ -31,8 +32,8 @@ def no_value_with_redis_key(key, seconds=5):
 
 
 def wait_for_value_in_redis_key(key, value=None, seconds=5):
-    time_to_appear = datetime.datetime.utcnow() + datetime.timedelta(seconds=seconds)
-    while datetime.datetime.utcnow() < time_to_appear:
+    time_to_appear = timezone.now() + datetime.timedelta(seconds=seconds)
+    while timezone.now() < time_to_appear:
         try:
             if (value is not None and redis_db[key] == value) or redis_db[key] is not None:
                 return True
@@ -77,30 +78,30 @@ def send_email_about_old_and_new_dishes_periodic_task_test(redis_container):
             name=f"Dish{i}",
             price=i * 10,
             time_to_cook=datetime.timedelta(minutes=i * 3),
-            added_datetime=(datetime.datetime.utcnow() - datetime.timedelta(days=1)),
+            added_datetime=(timezone.now() - datetime.timedelta(days=1)),
         )
     for i in range(3, 6):
         Dish.objects.create(
             name=f"Dish{i}",
             price=i * 10,
             time_to_cook=datetime.timedelta(minutes=i * 3),
-            added_datetime=(datetime.datetime.utcnow() - datetime.timedelta(days=1)),
-            changed_datetime=(datetime.datetime.utcnow() - datetime.timedelta(days=1)),
+            added_datetime=(timezone.now() - datetime.timedelta(days=1)),
+            changed_datetime=(timezone.now() - datetime.timedelta(days=1)),
         )
     for i in range(6, 9):
         Dish.objects.create(
             name=f"Dish{i}",
             price=i * 10,
             time_to_cook=datetime.timedelta(minutes=i * 3),
-            added_datetime=datetime.datetime.utcnow(),
-            changed_datetime=datetime.datetime.utcnow(),
+            added_datetime=timezone.now(),
+            changed_datetime=timezone.now(),
         )
     for i in range(9, 12):
         Dish.objects.create(
             name=f"Dish{i}",
             price=i * 10,
             time_to_cook=datetime.timedelta(minutes=i * 3),
-            added_datetime=datetime.datetime.utcnow(),
+            added_datetime=timezone.now(),
         )
     send_email_about_new_and_modified_dishes_from_yesterday_to_all_users_task()()
     assert wait_for_value_in_redis_key(f"send_email_task:{user.id}:called")
@@ -117,30 +118,30 @@ def send_email_about_old_dishes_periodic_task_test(redis_container):
             name=f"Dish{i}",
             price=i * 10,
             time_to_cook=datetime.timedelta(minutes=i * 3),
-            added_datetime=(datetime.datetime.utcnow() - datetime.timedelta(days=1)),
+            added_datetime=(timezone.now() - datetime.timedelta(days=1)),
         )
     for i in range(3, 6):
         Dish.objects.create(
             name=f"Dish{i}",
             price=i * 10,
             time_to_cook=datetime.timedelta(minutes=i * 3),
-            added_datetime=(datetime.datetime.utcnow() - datetime.timedelta(days=1)),
-            changed_datetime=(datetime.datetime.utcnow() - datetime.timedelta(days=1)),
+            added_datetime=(timezone.now() - datetime.timedelta(days=1)),
+            changed_datetime=(timezone.now() - datetime.timedelta(days=1)),
         )
     for i in range(6, 9):
         Dish.objects.create(
             name=f"Dish{i}",
             price=i * 10,
             time_to_cook=datetime.timedelta(minutes=i * 3),
-            added_datetime=datetime.datetime.utcnow(),
-            changed_datetime=datetime.datetime.utcnow(),
+            added_datetime=timezone.now(),
+            changed_datetime=timezone.now(),
         )
     for i in range(9, 12):
         Dish.objects.create(
             name=f"Dish{i}",
             price=i * 10,
             time_to_cook=datetime.timedelta(minutes=i * 3),
-            added_datetime=datetime.datetime.utcnow(),
+            added_datetime=timezone.now(),
         )
     send_email_about_modified_dishes_from_yesterday_to_all_users_task()()
     assert wait_for_value_in_redis_key(f"send_email_task:{user.id}:called")

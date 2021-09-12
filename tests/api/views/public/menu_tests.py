@@ -7,7 +7,6 @@ from http import HTTPStatus
 import pytest
 from django.db import transaction
 from django.http import JsonResponse
-from loguru import logger
 from ninja.responses import NinjaJSONEncoder
 
 from api.models import Dish
@@ -24,7 +23,7 @@ def get_all_non_empty_cards_test(anon_client):
     card = create_test_card()
     response: JsonResponse = anon_client.get(f"/{BASE_API_URL}/menu/cards")
     assert response.status_code == HTTPStatus.OK
-    assert remove_Z_in_datetime_value(response.json()) == [serialize_object(card)]
+    assert remove_Z_in_datetime_value(response.json()) == [remove_Z_in_datetime_value(serialize_object(card))]
 
 
 @pytest.mark.django_db
@@ -55,7 +54,8 @@ def get_all_non_empty_cards_sort_by_name_test(sort_by, sort_func, reverse, anon_
     response: JsonResponse = anon_client.get(f"/{BASE_API_URL}/menu/cards?sort_by={sort_by}")
     assert response.status_code == HTTPStatus.OK
     assert json.dumps(remove_Z_in_datetime_value(response.json()), sort_keys=True) == json.dumps(
-        sorted([serialize_object(card) for card in cards], key=sort_func, reverse=reverse), sort_keys=True
+        sorted([remove_Z_in_datetime_value(serialize_object(card)) for card in cards], key=sort_func, reverse=reverse),
+        sort_keys=True,
     )
 
 
@@ -136,8 +136,6 @@ all_possible_combinations = list(
     )
 )
 
-print("combinations created")
-
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
@@ -167,7 +165,6 @@ def get_all_non_empty_cards_filtering_test(filters_names, filters_values, anon_c
         filter_dict[filter_name] = filter_value
 
     expected_result_cards = [card for card in cards if card_passes_filter(card, filter_dict) if card.dishes.count() > 0]
-    logger.debug(f"Expected: {sorted([c.id for c in expected_result_cards])}")
     query_string = "&".join([f"{filter_name}={filter_value}" for filter_name, filter_value in filter_dict.items()])
     response: JsonResponse = anon_client.get(f"/{BASE_API_URL}/menu/cards?{query_string}")
     assert response.status_code == HTTPStatus.OK

@@ -795,7 +795,7 @@ dev = ["pytest (>=4.6.2)", "black (>=19.3b0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "34d0bb54924c5b49e63607a2b4ca737a34bb7bb6f2d98818a6777bec1b463bd6"
+content-hash = "7c31fa4cb7f1f51bc379dd68c72244b34aa37d17b7856ae3aeff139776305df3"
 
 [metadata.files]
 asgiref = [
