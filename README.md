@@ -27,6 +27,14 @@ Creating user: http://localhost:8000/api/v1/auth/
 
 Example env vars are available in ```local.env```
 
+```DEBUG_MODE``` - allows for responding with internal errors details
+
+```DEV_MODE``` - tells Huey to use SQLite db and disables auth requirments
+
+```TEST_MODE``` - swaps Redis dictionary to basic python and prevents emails sending
+
+```DEV_REDIS``` - uses Docker to create Redis instance while running server
+
 ## Authorization
 
 #### Creating JWT token
