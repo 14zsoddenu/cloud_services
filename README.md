@@ -91,7 +91,7 @@ docker build -f .\dev.Dockerfile . --rm -t cloud_services
 docker run --env-file .\test.env cloud_services python -m pytest -s -vvv -p no:cacheprovider
 ```
 
-#### Local manual
+#### Local
 
 ```bash
 export $(grep -v '#.*' test.env | xargs)
