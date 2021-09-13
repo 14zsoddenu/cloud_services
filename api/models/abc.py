@@ -14,3 +14,7 @@ class AbstractDatetimeTrackable(models.Model):
                 check=models.Q(added_datetime__lte=models.F("changed_datetime")),
             )
         ]
+
+    def __str__(self):
+        name = self.name if hasattr(self, "name") else None
+        return f"{self.__class__.__name__}({'name=' + name + ', ' if name else ''}added_datetime={self.added_datetime}, changed_datetime={self.changed_datetime})"

@@ -6,7 +6,7 @@ from ninja.compatibility import get_headers
 from ninja.security.http import HttpAuthBase
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from config import DEV_MODE
+from config import DISABLE_AUTH
 
 
 class JWTAuth(HttpAuthBase, ABC):  # TODO: maybe HttpBasicAuthBase
@@ -14,7 +14,7 @@ class JWTAuth(HttpAuthBase, ABC):  # TODO: maybe HttpBasicAuthBase
     header = "Authorization"
 
     def __call__(self, request: HttpRequest) -> Optional[Any]:
-        if DEV_MODE:
+        if DISABLE_AUTH:
             return True
         headers = get_headers(request)
         auth_value = headers.get(self.header)

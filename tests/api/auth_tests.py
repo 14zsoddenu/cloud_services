@@ -5,6 +5,7 @@ import pytest
 from config import BASE_API_URL
 
 
+@pytest.mark.django_db
 @pytest.mark.parametrize(
     "url,method",
     [

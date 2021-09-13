@@ -1,5 +1,18 @@
 # Cloud Services interview task
 
+## Requirements
+
+- Python 3.9
+- Docker
+- Docker-Compose
+
+## Quickstart
+
+```bash
+docker-compose up -d --build
+docker-compose logs -f
+```
+
 ## Installation
 
 ```bash
@@ -29,12 +42,13 @@ Example env vars are available in ```local.env```
 
 ```DEBUG_MODE``` - allows for responding with internal errors details
 
-```DEV_MODE``` - tells Huey to use SQLite db and disables auth requirments
+```DEV_MODE``` - tells Huey to use SQLite db
 
 ```TEST_MODE``` - swaps Redis dictionary to basic python and prevents emails sending
 
 ```DEV_REDIS``` - uses Docker to create Redis instance while running server
 
+```DISABLE_AUTH``` - disables auth requirments
 ## Authorization
 
 #### Creating JWT token
